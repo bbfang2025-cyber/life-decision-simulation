@@ -59,7 +59,28 @@
 
 ## 快速开始
 
-**最省事**：下载 [`dist/人生决策推演_下载与安装.pdf`](dist/人生决策推演_下载与安装.pdf)——里面有国内直连 zip 地址和一页"给 AI 的安装指令"，把 PDF 丢给你的 AI 就能自动下载并装好。
+**最省事**：下载 [`dist/人生决策推演_下载与安装.pdf`](dist/人生决策推演_下载与安装.pdf)——里面有永久有效的下载地址和一页"给 AI 的安装指令"，把 PDF 丢给你的 AI，说一句"帮我下载安装并调用这个 skill"就能自动装好并开始使用。
+
+### 方式零：直接下载（免翻墙 · 永久有效）
+
+**主地址**（冻结在 v1.0.0 版本上的发行版文件，内容永不改变，手机/电脑浏览器打开直接下载）：
+
+```
+https://gitee.com/bbfcyber/life-decision-simulation/releases/download/v1.0.0/life-decision-simulation_v1.0.0.zip
+```
+
+备用地址（按顺序试）：
+
+```
+# 备一 · 同版本 tag 归档（内容同样不可变）
+https://gitee.com/bbfcyber/life-decision-simulation/repository/archive/v1.0.0.zip
+# 备二 · 最新版（跟随仓库更新）
+https://gitee.com/bbfcyber/life-decision-simulation/repository/archive/master.zip
+# 备三 · GitHub 发行版镜像
+https://github.com/bbfang2025-cyber/life-decision-simulation/releases/download/v1.0.0/life-decision-simulation_v1.0.0.zip
+```
+
+以后版本更新会发 v1.1.0、v2.0.0 等新 tag，**旧版本的下载链接永远有效、永远指向同一份文件**。
 
 ### 方式一：装进支持技能的工具（推荐）
 

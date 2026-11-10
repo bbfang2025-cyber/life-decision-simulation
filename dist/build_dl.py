@@ -5,8 +5,10 @@
 """
 import os, subprocess, pathlib
 
-URL = "https://gitee.com/bbfcyber/life-decision-simulation/repository/archive/master.zip"
-URL_GH = "https://github.com/bbfang2025-cyber/life-decision-simulation/archive/refs/heads/main.zip"
+URL = "https://gitee.com/bbfcyber/life-decision-simulation/releases/download/v1.0.0/life-decision-simulation_v1.0.0.zip"
+URL_TAG = "https://gitee.com/bbfcyber/life-decision-simulation/repository/archive/v1.0.0.zip"
+URL_MASTER = "https://gitee.com/bbfcyber/life-decision-simulation/repository/archive/master.zip"
+URL_GH = "https://github.com/bbfang2025-cyber/life-decision-simulation/releases/download/v1.0.0/life-decision-simulation_v1.0.0.zip"
 REPO = "https://gitee.com/bbfcyber/life-decision-simulation"
 GH = "https://github.com/bbfang2025-cyber/life-decision-simulation"
 
@@ -21,39 +23,41 @@ HTML = f"""<!DOCTYPE html>
 <style>
   @page {{ size: A4; margin: 13mm 14mm 13mm 14mm; }}
   * {{ box-sizing: border-box; }}
-  body {{ font-family: "Microsoft YaHei","PingFang SC",sans-serif; font-size: 9.9pt; line-height: 1.62;
+  body {{ font-family: "Microsoft YaHei","PingFang SC",sans-serif; font-size: 9.7pt; line-height: 1.55;
          color: #161616; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
   .kicker {{ font-size: 8.5pt; letter-spacing: .3em; color: #8d8d8d; }}
-  h1 {{ font-size: 22pt; margin: 2.4mm 0 1.6mm; letter-spacing: -.6pt; }}
-  .lead {{ font-size: 10.8pt; color: #333; margin: 0 0 3.6mm; }}
-  .bar {{ height: 3px; width: 42px; background: #161616; margin-bottom: 4.2mm; }}
+  h1 {{ font-size: 20pt; margin: 2mm 0 1.4mm; letter-spacing: -.6pt; }}
+  .lead {{ font-size: 10.4pt; color: #333; margin: 0 0 2.8mm; }}
+  .bar {{ height: 3px; width: 42px; background: #161616; margin-bottom: 3.4mm; }}
 
-  .tag {{ background: #161616; color: #fff; font-size: 8.3pt; letter-spacing: .04em;
-          padding: 1.8mm 3mm; margin-bottom: 3.8mm; line-height: 1.55; }}
+  .tag {{ background: #161616; color: #fff; font-size: 8.1pt; letter-spacing: .04em;
+          padding: 1.6mm 3mm; margin-bottom: 3mm; line-height: 1.5; }}
 
-  .urlbox {{ border: 2px solid #161616; padding: 3.4mm 4.4mm 3mm; margin-bottom: 3.4mm; }}
-  .urlbox .lb {{ font-size: 8.4pt; letter-spacing: .16em; color: #767676; margin-bottom: 2mm; }}
-  .urlbox .u {{ font-family: Consolas, monospace; font-size: 9.4pt; line-height: 1.55; word-break: break-all; }}
-  .urlbox .tip {{ font-size: 8.6pt; color: #6a6a6a; margin-top: 2.4mm; }}
+  .urlbox {{ border: 2px solid #161616; padding: 2.8mm 4mm 2.4mm; margin-bottom: 2.8mm; }}
+  .urlbox .lb {{ font-size: 8.2pt; letter-spacing: .14em; color: #767676; margin-bottom: 1.6mm; }}
+  .urlbox .u {{ font-family: Consolas, monospace; font-size: 8.9pt; line-height: 1.5; word-break: break-all; }}
+  .urlbox .tip {{ font-size: 8.2pt; color: #6a6a6a; margin-top: 1.8mm; }}
+  .urlbox .alt {{ margin-top: 1.6mm; }}
+  .urlbox .alt div {{ margin-bottom: 1.1mm; }}
 
-  .sayit {{ background: #161616; color: #fff; padding: 4mm 4.6mm 3.6mm; margin-bottom: 3.4mm; }}
-  .sayit .lb {{ font-size: 8.2pt; letter-spacing: .18em; opacity: .75; margin-bottom: 2mm; }}
-  .sayit .big {{ font-size: 15pt; font-weight: 700; letter-spacing: .02em; margin: 0 0 1.6mm; }}
-  .sayit p {{ margin: 0; font-size: 8.9pt; line-height: 1.58; opacity: .9; }}
+  .sayit {{ background: #161616; color: #fff; padding: 3.2mm 4.4mm 3mm; margin-bottom: 3mm; }}
+  .sayit .lb {{ font-size: 8pt; letter-spacing: .18em; opacity: .75; margin-bottom: 1.6mm; }}
+  .sayit .big {{ font-size: 14pt; font-weight: 700; letter-spacing: .02em; margin: 0 0 1.4mm; }}
+  .sayit p {{ margin: 0; font-size: 8.7pt; line-height: 1.52; opacity: .9; }}
 
-  h2 {{ font-size: 10.8pt; margin: 4.4mm 0 1.8mm; padding-bottom: 1mm; border-bottom: 1.4px solid #161616; }}
-  h3 {{ font-size: 10pt; margin: 3.6mm 0 1.4mm; }}
-  p {{ margin: 0 0 2mm; }}
-  ol, ul {{ margin: 0 0 2.2mm; padding-left: 1.15em; }}
-  li {{ margin-bottom: 1.1mm; }}
-  .mono {{ font-family: Consolas, monospace; font-size: 8.6pt; background: #f1f1ec; padding: .2mm 1.2mm; }}
-  .box {{ border: 1px solid #d6d6d0; padding: 2.8mm 3.4mm; margin: 0 0 2.4mm; font-size: 9pt; line-height: 1.58; }}
+  h2 {{ font-size: 10.4pt; margin: 3.4mm 0 1.6mm; padding-bottom: .9mm; border-bottom: 1.4px solid #161616; }}
+  h3 {{ font-size: 9.8pt; margin: 3.4mm 0 1.3mm; }}
+  p {{ margin: 0 0 1.8mm; }}
+  ol, ul {{ margin: 0 0 2mm; padding-left: 1.15em; }}
+  li {{ margin-bottom: 1mm; }}
+  .mono {{ font-family: Consolas, monospace; font-size: 8.4pt; background: #f1f1ec; padding: .2mm 1.2mm; }}
+  .box {{ border: 1px solid #d6d6d0; padding: 2.4mm 3.2mm; margin: 0 0 2mm; font-size: 8.8pt; line-height: 1.52; }}
   .box.dark {{ border: 2px solid #161616; }}
   .box b {{ color: #000; }}
   .page2 {{ page-break-before: always; }}
-  .step {{ border-left: 3px solid #161616; padding: .8mm 0 .8mm 3.4mm; margin-bottom: 2.4mm; }}
-  .step b {{ display: block; margin-bottom: .4mm; }}
-  .step span {{ font-size: 9pt; color: #3c3c3c; }}
+  .step {{ border-left: 3px solid #161616; padding: .6mm 0 .6mm 3.2mm; margin-bottom: 1.8mm; }}
+  .step b {{ display: block; margin-bottom: .3mm; }}
+  .step span {{ font-size: 8.8pt; color: #3c3c3c; }}
   .foot {{ margin-top: 5mm; border-top: 1px solid #dcdcdc; padding-top: 3.5mm; font-size: 8.6pt; color: #5e5e5e; }}
   .m {{ font-size: 9.3pt; line-height: 1.66; }}
   .kv {{ color: #6a6a6a; }}
@@ -77,9 +81,18 @@ HTML = f"""<!DOCTYPE html>
 </div>
 
 <div class="urlbox">
-  <div class="lb">国内直连下载地址（Gitee · 免翻墙 · 已实测可下）</div>
+  <div class="lb">主下载地址（永久有效 · 冻结在 v1.0.0 版本上，内容永不改变）</div>
   <div class="u">{URL}</div>
-  <div class="tip">电脑上打开会直接开始下载 zip。<b>手机上打开会先进一个「下载仓库」页面，点页面里的下载按钮即可</b>——不是打不开，是它在问你存哪儿。</div>
+  <div class="tip">电脑、手机浏览器打开都会<b>直接开始下载 zip</b>（已实测）。v1.0.0 是冻结版本：以后更新会发 v1.1.0 等新版本，<b>这个地址永远指向这一份文件，不会失效</b>。</div>
+</div>
+
+<div class="urlbox" style="border-color:#8d8d8d">
+  <div class="lb">备用地址（按顺序试，任何一个都能下到技能）</div>
+  <div class="u" style="font-size:8.3pt">
+    <div>备一 · 同版本镜像（手机上会先进「下载仓库」页，点下载按钮即可）：<br>{URL_TAG}</div>
+    <div>备二 · 最新版（跟随仓库更新，内容可能比 v1.0.0 新）：<br>{URL_MASTER}</div>
+    <div>备三 · GitHub 镜像（需能访问 GitHub）：<br>{URL_GH}</div>
+  </div>
 </div>
 
 <h2>它读不了 PDF 的话，你自己装（三步，两分钟）</h2>
@@ -102,14 +115,17 @@ HTML = f"""<!DOCTYPE html>
   用户大概只说了"帮我下载安装并调用这个 skill"，其余细节全在下面，<b>不要反问用户</b>，按顺序做完。
   只有落到第七节的硬阻塞时才找用户。</p>
 
-  <h3>一、下载（主源失败自动换备源，最多试 6 次）</h3>
+  <h3>一、下载（四个源按顺序试，最多试 8 次）</h3>
   <ul class="m">
-    <li>主源：<span class="mono">{URL}</span></li>
-    <li>备源（国内可能慢，但通常可用）：<span class="mono">{URL_GH}</span></li>
-    <li>有命令行：<span class="mono">curl -L --retry 3 -o lds.zip "&lt;地址&gt;"</span>；Windows PowerShell：<span class="mono">Invoke-WebRequest -Uri "&lt;地址&gt;" -OutFile lds.zip -MaximumRedirection 10</span>；没有 curl 用 <span class="mono">python -c "import urllib.request;urllib.request.urlretrieve('&lt;地址&gt;','lds.zip')"</span></li>
+    <li>主源（永久冻结文件，内容永不改变）：<span class="mono">{URL}</span></li>
+    <li>备一 · Gitee tag 归档（同一版本，手机 UA 可能拿到 HTML 落地页——那是给浏览器看的，换成桌面 UA 或从 HTML 里解析下载链接即可）：<span class="mono">{URL_TAG}</span></li>
+    <li>备二 · Gitee 最新版（跟随仓库更新）：<span class="mono">{URL_MASTER}</span></li>
+    <li>备三 · GitHub 发行版（国内可能连不上，能连就用）：<span class="mono">{URL_GH}</span></li>
+    <li>有命令行：<span class="mono">curl -L --retry 3 -o lds.zip "&lt;地址&gt;"</span>；Windows PowerShell：<span class="mono">Invoke-WebRequest -Uri "&lt;地址&gt;" -OutFile lds.zip -MaximumRedirection 10</span>；都没有用 <span class="mono">python -c "import urllib.request;urllib.request.urlretrieve('&lt;地址&gt;','lds.zip')"</span></li>
     <li>没有命令行环境：用你的浏览器/网页抓取工具打开地址保存文件，或读取文件内容。</li>
-    <li><b>下载判定</b>：文件头应是 <span class="mono">PK</span>，大小 40KB–2MB。若拿到的是 <span class="mono">&lt;html</span> 开头、大小十几 KB，说明被重定向到网页了 → 换备源重试；两个源都这样，走第七节。</li>
-    <li>失败就重试，间隔 2s / 5s / 10s 递增，别一次失败就放弃，也别把"网络错误"直接当结论汇报。</li>
+    <li><b>下载判定</b>：文件头应是 <span class="mono">PK</span>，大小 30KB–2MB。若拿到的是 <span class="mono">&lt;html</span> 开头，说明被重定向到网页 → 换下一个源重试。</li>
+    <li>失败就换源重试，间隔 2s / 5s / 10s 递增，别一次失败就放弃，也别把"网络错误"直接当结论汇报。</li>
+    <li>四个源任选其一即可，<b>内容等价</b>（主源和备三是同一份冻结文件；备二可能略新，一样能用）。</li>
   </ul>
 
   <h3>二、解压（不依赖特定工具）</h3>
@@ -163,7 +179,7 @@ HTML = f"""<!DOCTYPE html>
 
   <h3>七、遇到这几种情况怎么自己解决（别问用户，按表处理）</h3>
   <ul class="m">
-    <li><b>两个地址都下不动</b>：可能是网络受限。改用你能访问的镜像/代理重试；仍不行，才请用户手动下载第 1 页那个 zip，然后把文件拖给你，你从第二节继续。</li>
+    <li><b>四个地址都下不动</b>：可能是网络受限。改用你能访问的镜像/代理重试；仍不行，才请用户手动下载第 1 页主地址的 zip，然后把文件拖给你，你从第二节继续。</li>
     <li><b>解压失败/文件损坏</b>：删掉重下一次（换备源）；仍失败说明下载被截断，报告实际字节数。</li>
     <li><b>没有写权限</b>：改写到用户可写目录（如桌面同级目录），把路径明确告诉用户，并给出"手动移动到 skills 目录"的一行命令。</li>
     <li><b>你的运行环境根本没有文件系统</b>（纯网页聊天 AI，不能写文件）：<b>降级方案</b>——把 SKILL.md 全文作为"自定义指令 / 系统提示 / 知识库文件"粘贴进去，然后按第五节的方式直接开始推演；并告诉用户"我这边没法装到磁盘，已用等效方式启用，你换到支持技能的客户端（WorkBuddy / Claude）可以正规安装"。</li>
