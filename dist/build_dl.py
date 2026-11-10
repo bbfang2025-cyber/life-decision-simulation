@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-"""生成《下载与安装》PDF：里面是 Gitee 直连 zip 地址 + 给 AI 的安装指令。"""
+"""生成《下载与安装》PDF v2：
+用户只需要说一句「帮我下载安装并调用这个 skill」，
+其余所有分支（下载失败、解压、装哪、调不出来、工具不支持技能…）全部写在给 AI 的手册里。
+"""
 import os, subprocess, pathlib
 
 URL = "https://gitee.com/bbfcyber/life-decision-simulation/repository/archive/master.zip"
+URL_GH = "https://github.com/bbfang2025-cyber/life-decision-simulation/archive/refs/heads/main.zip"
 REPO = "https://gitee.com/bbfcyber/life-decision-simulation"
 GH = "https://github.com/bbfang2025-cyber/life-decision-simulation"
 
@@ -15,45 +19,62 @@ PDF_PATH = os.path.join(OUT, "人生决策推演_下载与安装.pdf")
 HTML = f"""<!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8"><title>人生决策推演 · 下载与安装</title>
 <style>
-  @page {{ size: A4; margin: 14mm 14mm 14mm 14mm; }}
+  @page {{ size: A4; margin: 13mm 14mm 13mm 14mm; }}
   * {{ box-sizing: border-box; }}
-  body {{ font-family: "Microsoft YaHei","PingFang SC",sans-serif; font-size: 10.4pt; line-height: 1.72;
+  body {{ font-family: "Microsoft YaHei","PingFang SC",sans-serif; font-size: 9.9pt; line-height: 1.62;
          color: #161616; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }}
   .kicker {{ font-size: 8.5pt; letter-spacing: .3em; color: #8d8d8d; }}
-  h1 {{ font-size: 25pt; margin: 3mm 0 2mm; letter-spacing: -.6pt; }}
-  .lead {{ font-size: 11.6pt; color: #333; margin: 0 0 5mm; }}
-  .lead b {{ background: linear-gradient(transparent 62%, #ffe98a 62%); }}
-  .bar {{ height: 3px; width: 42px; background: #161616; margin-bottom: 6mm; }}
+  h1 {{ font-size: 22pt; margin: 2.4mm 0 1.6mm; letter-spacing: -.6pt; }}
+  .lead {{ font-size: 10.8pt; color: #333; margin: 0 0 3.6mm; }}
+  .bar {{ height: 3px; width: 42px; background: #161616; margin-bottom: 4.2mm; }}
 
-  .urlbox {{ border: 2px solid #161616; padding: 4.5mm 5mm 4mm; margin-bottom: 4mm; }}
+  .tag {{ background: #161616; color: #fff; font-size: 8.3pt; letter-spacing: .04em;
+          padding: 1.8mm 3mm; margin-bottom: 3.8mm; line-height: 1.55; }}
+
+  .urlbox {{ border: 2px solid #161616; padding: 3.4mm 4.4mm 3mm; margin-bottom: 3.4mm; }}
   .urlbox .lb {{ font-size: 8.4pt; letter-spacing: .16em; color: #767676; margin-bottom: 2mm; }}
-  .urlbox .u {{ font-family: Consolas, monospace; font-size: 9.6pt; line-height: 1.55; word-break: break-all; }}
-  .urlbox .tip {{ font-size: 8.6pt; color: #6a6a6a; margin-top: 2.5mm; }}
+  .urlbox .u {{ font-family: Consolas, monospace; font-size: 9.4pt; line-height: 1.55; word-break: break-all; }}
+  .urlbox .tip {{ font-size: 8.6pt; color: #6a6a6a; margin-top: 2.4mm; }}
 
-  .sayit {{ background: #161616; color: #fff; padding: 4.5mm 5mm; margin-bottom: 5mm; }}
-  .sayit .lb {{ font-size: 8.2pt; letter-spacing: .18em; opacity: .72; margin-bottom: 2mm; }}
-  .sayit p {{ margin: 0; font-size: 10.4pt; line-height: 1.68; }}
+  .sayit {{ background: #161616; color: #fff; padding: 4mm 4.6mm 3.6mm; margin-bottom: 3.4mm; }}
+  .sayit .lb {{ font-size: 8.2pt; letter-spacing: .18em; opacity: .75; margin-bottom: 2mm; }}
+  .sayit .big {{ font-size: 15pt; font-weight: 700; letter-spacing: .02em; margin: 0 0 1.6mm; }}
+  .sayit p {{ margin: 0; font-size: 8.9pt; line-height: 1.58; opacity: .9; }}
 
-  h2 {{ font-size: 11.6pt; margin: 6mm 0 2.4mm; padding-bottom: 1.3mm; border-bottom: 1.4px solid #161616; }}
-  h3 {{ font-size: 10.4pt; margin: 4.5mm 0 1.8mm; }}
-  p {{ margin: 0 0 2.4mm; }}
-  ol, ul {{ margin: 0 0 2.6mm; padding-left: 1.15em; }}
-  li {{ margin-bottom: 1.5mm; }}
-  .mono {{ font-family: Consolas, monospace; font-size: 9pt; background: #f1f1ec; padding: .3mm 1.2mm; }}
-  .box {{ border: 1px solid #d6d6d0; padding: 3.5mm 4mm; margin: 0 0 3mm; font-size: 9.5pt; line-height: 1.66; }}
+  h2 {{ font-size: 10.8pt; margin: 4.4mm 0 1.8mm; padding-bottom: 1mm; border-bottom: 1.4px solid #161616; }}
+  h3 {{ font-size: 10pt; margin: 3.6mm 0 1.4mm; }}
+  p {{ margin: 0 0 2mm; }}
+  ol, ul {{ margin: 0 0 2.2mm; padding-left: 1.15em; }}
+  li {{ margin-bottom: 1.1mm; }}
+  .mono {{ font-family: Consolas, monospace; font-size: 8.6pt; background: #f1f1ec; padding: .2mm 1.2mm; }}
+  .box {{ border: 1px solid #d6d6d0; padding: 2.8mm 3.4mm; margin: 0 0 2.4mm; font-size: 9pt; line-height: 1.58; }}
+  .box.dark {{ border: 2px solid #161616; }}
   .box b {{ color: #000; }}
-  .kv {{ font-size: 9.4pt; color: #4a4a4a; }}
   .page2 {{ page-break-before: always; }}
-  .step {{ border-left: 3px solid #161616; padding: 1mm 0 1mm 4mm; margin-bottom: 3.2mm; }}
-  .step b {{ display: block; margin-bottom: .6mm; }}
-  .step span {{ font-size: 9.4pt; color: #3c3c3c; }}
-  .foot {{ margin-top: 6mm; border-top: 1px solid #dcdcdc; padding-top: 4mm; font-size: 8.8pt; color: #5e5e5e; }}
+  .step {{ border-left: 3px solid #161616; padding: .8mm 0 .8mm 3.4mm; margin-bottom: 2.4mm; }}
+  .step b {{ display: block; margin-bottom: .4mm; }}
+  .step span {{ font-size: 9pt; color: #3c3c3c; }}
+  .foot {{ margin-top: 5mm; border-top: 1px solid #dcdcdc; padding-top: 3.5mm; font-size: 8.6pt; color: #5e5e5e; }}
+  .m {{ font-size: 9.3pt; line-height: 1.66; }}
+  .kv {{ color: #6a6a6a; }}
 </style></head><body>
 
 <div class="kicker">LIFE DECISION SIMULATION</div>
 <h1>人生决策推演 · 下载与安装</h1>
-<p class="lead">把这份 PDF 丢给你的 AI，它自己能下载、能装好。<br>你也可以照着下面的地址手动下，两分钟搞定。</p>
+<p class="lead">把这份 PDF 丢给你的 AI，说一句话，剩下的它自己会办。</p>
 <div class="bar"></div>
+
+<div class="sayit">
+  <div class="lb">你要说的话（就这一句）</div>
+  <div class="big">帮我下载、安装并调用这个 skill</div>
+  <p>不用解释地址、不用教它解压、不用管装哪个目录——从第 2 页开始是一份写给 AI 的完整操作手册，
+  下载、校验、解压、选目录、装完怎么调、调不出来怎么办、你的工具不支持技能怎么办，全部写在里面，它会自己看自己处理。</p>
+</div>
+
+<div class="tag">
+  给 AI 的第一句话：如果你就是被用户把这份 PDF 丢过来的一方，<b>直接跳到第 2 页《操作手册》开始执行</b>。
+  用户可能只说了一句"帮我下载安装并调用这个 skill"——那已经够了，不要反问用户，不要只做总结，一路做到"调用"这一步为止。
+</div>
 
 <div class="urlbox">
   <div class="lb">国内直连下载地址（Gitee · 免翻墙 · 已实测可下）</div>
@@ -61,70 +82,102 @@ HTML = f"""<!DOCTYPE html>
   <div class="tip">电脑上打开会直接开始下载 zip。<b>手机上打开会先进一个「下载仓库」页面，点页面里的下载按钮即可</b>——不是打不开，是它在问你存哪儿。</div>
 </div>
 
-<div class="sayit">
-  <div class="lb">最省事的用法：把这份 PDF 发给你的 AI，配上这句话</div>
-  <p>按这份 PDF 里的地址把这个技能下载并安装到你的技能目录，装完把校验结果和安装路径发我。</p>
-</div>
-
-<h2>手动装（三步）</h2>
+<h2>它读不了 PDF 的话，你自己装（三步，两分钟）</h2>
 <div class="step"><b>第一步 · 下载</b><span>复制上面那串地址到浏览器打开，会得到一个 zip。Windows 上如果提示"不常下载"，点"保留"。</span></div>
 <div class="step"><b>第二步 · 解压到技能目录</b><span>解压出来通常是一层 <span class="mono">life-decision-simulation-master</span> 文件夹，<b>把里面那层整个文件夹</b>放进去，重命名成 <span class="mono">life-decision-simulation</span>：<br>
   WorkBuddy → <span class="mono">C:\\Users\\你的用户名\\.workbuddy\\skills\\</span><br>
   Claude Code / 桌面版 → <span class="mono">C:\\Users\\你的用户名\\.claude\\skills\\</span></span></div>
 <div class="step"><b>第三步 · 确认结构对</b><span>放好之后，路径应该是 <span class="mono">skills\\life-decision-simulation\\SKILL.md</span>——<b>SKILL.md 必须直接在这一层</b>，不要再套一层文件夹，这是最常见的错。</span></div>
 
-<div class="box" style="margin-top:5mm">
-  <b>装好之后，测一句就知道有没有生效：</b><br>
-  发「我想辞职回老家，收入得减半，你说我该走吗？」<br>
+<div class="box" style="margin-top:4.5mm">
+  <b>装完怎么知道成了：</b>发「我想辞职回老家，收入得减半，你说我该走吗？」<br>
   正常反应是：先用一句话重述你的情况，然后<b>只问一个问题</b>（比如"老家那边工作定了吗"），问完等你答。<br>
-  如果它当场甩你一堆建议，说明没装上，回去检查第三点。
+  如果它当场甩你一堆建议，说明没装上，回去检查第三步。<br>
+  <span class="kv">（技能是在对话开始时加载的，刚装完这一轮可能调不出来——开一个新对话再说就正常了。）</span>
 </div>
 
 <div class="page2">
-  <h2>给 AI 的安装指令（这一页是给机器读的）</h2>
-  <p>用户会把这份 PDF 发给你。请按下面执行，不要只做总结。</p>
+  <h2>操作手册 · 给 AI（用户把这份 PDF 丢给你时，按此执行）</h2>
+  <p class="m">任务：把 <b>life-decision-simulation（人生决策推演）</b> 装到本机技能目录，<b>并真的调用一次</b>。
+  用户大概只说了"帮我下载安装并调用这个 skill"，其余细节全在下面，<b>不要反问用户</b>，按顺序做完。
+  只有落到第七节的硬阻塞时才找用户。</p>
 
-  <h3>一、下载</h3>
-  <p>下载地址：<span class="mono">{URL}</span></p>
-  <ul>
-    <li>命令行：<span class="mono">curl -L -o lds.zip "{URL}"</span>（Windows PowerShell 用 <span class="mono">Invoke-WebRequest -Uri "{URL}" -OutFile lds.zip</span>）</li>
-    <li>下载完先校验：文件应是 zip，大小在 40KB–2MB 之间。拿到的是 HTML 或几十字节的文本，说明被重定向到登录页了，告诉用户改用手动下载。</li>
-    <li>如果没有命令行环境，可以用你的浏览器工具打开这个地址下载。</li>
+  <h3>一、下载（主源失败自动换备源，最多试 6 次）</h3>
+  <ul class="m">
+    <li>主源：<span class="mono">{URL}</span></li>
+    <li>备源（国内可能慢，但通常可用）：<span class="mono">{URL_GH}</span></li>
+    <li>有命令行：<span class="mono">curl -L --retry 3 -o lds.zip "&lt;地址&gt;"</span>；Windows PowerShell：<span class="mono">Invoke-WebRequest -Uri "&lt;地址&gt;" -OutFile lds.zip -MaximumRedirection 10</span>；没有 curl 用 <span class="mono">python -c "import urllib.request;urllib.request.urlretrieve('&lt;地址&gt;','lds.zip')"</span></li>
+    <li>没有命令行环境：用你的浏览器/网页抓取工具打开地址保存文件，或读取文件内容。</li>
+    <li><b>下载判定</b>：文件头应是 <span class="mono">PK</span>，大小 40KB–2MB。若拿到的是 <span class="mono">&lt;html</span> 开头、大小十几 KB，说明被重定向到网页了 → 换备源重试；两个源都这样，走第七节。</li>
+    <li>失败就重试，间隔 2s / 5s / 10s 递增，别一次失败就放弃，也别把"网络错误"直接当结论汇报。</li>
   </ul>
 
-  <h3>二、解压</h3>
-  <ul>
-    <li>解压后最外层通常是 <span class="mono">life-decision-simulation-master/</span>，里面有 <span class="mono">SKILL.md</span>、<span class="mono">references/</span>、<span class="mono">README.md</span>。</li>
-    <li><b>以含 SKILL.md 的那一层为准</b>，把它重命名为 <span class="mono">life-decision-simulation</span>。</li>
+  <h3>二、解压（不依赖特定工具）</h3>
+  <ul class="m">
+    <li>优先 <span class="mono">unzip -q lds.zip -d lds_tmp</span>；Windows 用 <span class="mono">Expand-Archive lds.zip -DestinationPath lds_tmp -Force</span>；都没有用 <span class="mono">python -c "import zipfile;zipfile.ZipFile('lds.zip').extractall('lds_tmp')"</span>。</li>
+    <li>解压后在 <span class="mono">lds_tmp</span> 里找 <b>含 SKILL.md 的那一层目录</b>（通常叫 <span class="mono">life-decision-simulation-master/</span>），它就是技能根目录；若 zip 本身是扁平的（SKILL.md 直接在最外层），就把整个 <span class="mono">lds_tmp</span> 当技能根目录。</li>
+    <li>把这个根目录重命名/复制为 <span class="mono">life-decision-simulation</span>。</li>
   </ul>
 
-  <h3>三、放到技能目录</h3>
-  <ul>
-    <li>WorkBuddy：<span class="mono">~/.workbuddy/skills/life-decision-simulation/</span></li>
-    <li>Claude Code / 桌面版：<span class="mono">~/.claude/skills/life-decision-simulation/</span></li>
-    <li>其他工具：找它的 skills / 技能目录，不确定就问用户。目录不存在就先创建。</li>
-    <li>最终结构必须是：<span class="mono">skills/life-decision-simulation/SKILL.md</span> + <span class="mono">skills/life-decision-simulation/references/</span>（两个文件）</li>
+  <h3>三、装到哪儿（自己探测，不要问用户）</h3>
+  <ul class="m">
+    <li>按顺序探测本机：<span class="mono">~/.workbuddy/</span> → <span class="mono">~/.claude/</span> → <span class="mono">~/.codex/</span> → 你当前运行环境的配置根目录里有没有 <span class="mono">skills</span> 目录。</li>
+    <li>命中哪个就把技能放进哪个的 <span class="mono">skills/life-decision-simulation/</span>（目录不存在就创建）。<b>命中多个就都装</b>，反正文件很小。</li>
+    <li>一个都没命中：优先创建 <span class="mono">~/.workbuddy/skills/</span> 装进去（这是用户发这份文件时用的工具）；如果你自己明确是别的客户端，装它自己的 skills 目录。</li>
+    <li>最终结构必须长这样：<br>
+      <span class="mono">skills/life-decision-simulation/SKILL.md</span><br>
+      <span class="mono">skills/life-decision-simulation/references/提问总库.md</span><br>
+      <span class="mono">skills/life-decision-simulation/references/示范_北京回老家_完整报告.md</span></li>
   </ul>
 
-  <h3>四、校验（必须做完再回话）</h3>
-  <ol>
-    <li>确认 <span class="mono">SKILL.md</span> 首行是 <span class="mono">---</span>，frontmatter 里 <span class="mono">name: life-decision-simulation</span>。</li>
-    <li>确认 <span class="mono">references/提问总库.md</span> 能搜到"第一格"到"第六格"；<span class="mono">references/示范_北京回老家_完整报告.md</span> 能搜到"六问实录"。</li>
-    <li>确认 <span class="mono">SKILL.md</span> 里含"六格体检""四位顾问""翻转力"。</li>
-    <li>把安装路径和这三项校验结果一起报给用户。</li>
+  <h3>四、校验（这四项跑完才算装完）</h3>
+  <ol class="m">
+    <li>树结构对：上面三个文件都在，SKILL.md 不在多套的一层里。</li>
+    <li>frontmatter 对：SKILL.md 首行是 <span class="mono">---</span>，里面有 <span class="mono">name: life-decision-simulation</span>。</li>
+    <li>内容全：SKILL.md 含"六格体检""四位顾问""翻转力"；<span class="mono">提问总库.md</span> 含"第一格"…"第六格"；示范报告含"六问实录"。</li>
+    <li>把安装绝对路径 + 这四项结果记下来，第六节回执要用。<b>任何一项不过，回去修，不要带着残缺汇报"已安装"。</b></li>
   </ol>
 
-  <h3>五、最后对用户说</h3>
+  <h3>五、调用（重点：调不出来不等于装失败）</h3>
+  <div class="box dark">
+    <b>先看这一条，否则你会误判：</b>技能清单是<b>在对话开始时加载</b>的。你刚写进磁盘的文件，<b>当前这一轮对话里很可能还不在你的技能列表里</b>——这是正常机制，<b>不是安装失败</b>，绝对不要对用户说"安装失败/找不到技能"。
+  </div>
+  <ul class="m">
+    <li><b>本轮的调用方式：直接把 SKILL.md 当你的操作手册来执行。</b>读全文，然后严格按它走：
+      ①先做六格体检，<b>第一句只做两件事——用一句话重述用户的情况，然后只问一个问题</b>，问完停下等他答；
+      ②六格问全后，四位顾问依次上场（马斯克第一性原理拆解 → 乔布斯减法取舍 → 芒格逆向算长期 → 王阳明致良知照内心）；
+      ③用翻转力排序给结论，四步有一步没过就明确说"先别做"；④输出《人生决策推演报告》（八节）。
+      <b>不要一次把全部内容倒给用户，一次只推进一步。</b></li>
+    <li>用户如果在这句话里就给了自己的事（比如"我该不该回老家"），<b>别等，直接用第一问开始推演</b>。</li>
+    <li>用户如果只说了那句"帮我安装并调用"，那就<b>拿这一问做演示</b>：「先拿你自己的事试一句——你现在正纠结的那个决定是什么？一句话就行。」</li>
+    <li>同时告诉用户：要在客户端里"原生调用"，<b>开一个新对话</b>说「帮我推演一下」或直接说纠结的事就行，技能已经装好了。</li>
+  </ul>
+
+  <h3>六、回执格式（做完照这个说，别写小作文）</h3>
   <div class="box">
-    「装好了。现在可以直接说：<b>我在北京做运营五年了，想回老家，收入得减半，女朋友还在异地，我该不该走？</b>」<br>
-    「以后想调它，说一句<b>帮我推演一下</b>就行。」
+    ✅ 已安装到：<span class="mono">&lt;绝对路径&gt;</span><br>
+    ✅ 校验：SKILL.md ✓ ／ 提问总库 ✓ ／ 示范报告 ✓ ／ frontmatter ✓<br>
+    ▶ 现在就能用：直接说你的决定（例：我在北京做运营五年，想回老家但收入减半，女朋友还在异地，该不该走）<br>
+    ▶ 若你的客户端没立刻识别到新技能：<b>开一个新对话</b>，说"帮我推演一下"即可。
   </div>
 
-  <h3>六、不要做的事</h3>
-  <ul>
-    <li>不要把 SKILL.md 改名、不要翻译成中文文件名</li>
-    <li>不要漏掉 references/（示范案例和 48 问总库是这个技能最值钱的部分）</li>
-    <li>不要只写一句"我看过这份文档了"就结束——没有落地文件就等于没装</li>
+  <h3>七、遇到这几种情况怎么自己解决（别问用户，按表处理）</h3>
+  <ul class="m">
+    <li><b>两个地址都下不动</b>：可能是网络受限。改用你能访问的镜像/代理重试；仍不行，才请用户手动下载第 1 页那个 zip，然后把文件拖给你，你从第二节继续。</li>
+    <li><b>解压失败/文件损坏</b>：删掉重下一次（换备源）；仍失败说明下载被截断，报告实际字节数。</li>
+    <li><b>没有写权限</b>：改写到用户可写目录（如桌面同级目录），把路径明确告诉用户，并给出"手动移动到 skills 目录"的一行命令。</li>
+    <li><b>你的运行环境根本没有文件系统</b>（纯网页聊天 AI，不能写文件）：<b>降级方案</b>——把 SKILL.md 全文作为"自定义指令 / 系统提示 / 知识库文件"粘贴进去，然后按第五节的方式直接开始推演；并告诉用户"我这边没法装到磁盘，已用等效方式启用，你换到支持技能的客户端（WorkBuddy / Claude）可以正规安装"。</li>
+    <li><b>用户的客户端不支持"技能"这个概念</b>：同上降级，别硬装到乱七八糟的地方。</li>
+    <li><b>磁盘上已经有同名技能</b>：先把旧的移到 <span class="mono">life-decision-simulation.bak</span> 再装，装完告诉用户备份在哪。</li>
+  </ul>
+
+  <h3>八、不要做的事</h3>
+  <ul class="m">
+    <li>不要只写一句"我看过这份文档了"就结束——<b>没有落地文件就等于没装</b>。</li>
+    <li>不要把 SKILL.md 改名、不要翻译成中文文件名、不要漏掉 references/（示范案例和 48 问总库是这个技能最值钱的部分）。</li>
+    <li>不要因为"当前会话调不到技能"就判定失败（见第五节）。</li>
+    <li>不要把"网络错误""权限不足"当成最终结论丢给用户，先按第七节处理。</li>
+    <li>不要在推演时一口气输出全部六格 + 四位顾问——这个技能的规矩是一次只问一个问题。</li>
   </ul>
 
   <div class="foot">
