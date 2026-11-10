@@ -45,13 +45,13 @@ HTML = f"""<!DOCTYPE html>
   .sayit .big {{ font-size: 14pt; font-weight: 700; letter-spacing: .02em; margin: 0 0 1.4mm; }}
   .sayit p {{ margin: 0; font-size: 8.7pt; line-height: 1.52; opacity: .9; }}
 
-  h2 {{ font-size: 10.4pt; margin: 3.4mm 0 1.6mm; padding-bottom: .9mm; border-bottom: 1.4px solid #161616; }}
+  h2 {{ font-size: 10.4pt; margin: 2.9mm 0 1.4mm; padding-bottom: .9mm; border-bottom: 1.4px solid #161616; }}
   h3 {{ font-size: 9.8pt; margin: 3.4mm 0 1.3mm; }}
   p {{ margin: 0 0 1.8mm; }}
   ol, ul {{ margin: 0 0 2mm; padding-left: 1.15em; }}
-  li {{ margin-bottom: 1mm; }}
+  li {{ margin-bottom: 0.7mm; }}
   .mono {{ font-family: Consolas, monospace; font-size: 8.4pt; background: #f1f1ec; padding: .2mm 1.2mm; }}
-  .box {{ border: 1px solid #d6d6d0; padding: 2.4mm 3.2mm; margin: 0 0 2mm; font-size: 8.8pt; line-height: 1.52; }}
+  .box {{ border: 1px solid #d6d6d0; padding: 2.2mm 3.2mm; margin: 0 0 1.7mm; font-size: 8.8pt; line-height: 1.52; }}
   .box.dark {{ border: 2px solid #161616; }}
   .box b {{ color: #000; }}
   .page2 {{ page-break-before: always; }}
@@ -81,9 +81,9 @@ HTML = f"""<!DOCTYPE html>
 </div>
 
 <div class="urlbox">
-  <div class="lb">主下载地址（永久有效 · 冻结在 v1.0.0 版本上，内容永不改变）</div>
+  <div class="lb">主下载地址（永久有效 · 地址永不改变，内容随版本更新）</div>
   <div class="u">{URL}</div>
-  <div class="tip">电脑、手机浏览器打开都会<b>直接开始下载 zip</b>（已实测）。v1.0.0 是冻结版本：以后更新会发 v1.1.0 等新版本，<b>这个地址永远指向这一份文件，不会失效</b>。</div>
+  <div class="tip">电脑、手机浏览器打开都会<b>直接开始下载 zip</b>（已实测）。<b>这个地址永久不变</b>：以后升级，我们只替换地址背后的文件，链接一个字都不会改，你存下的旧链接永远能下到最新版。</div>
 </div>
 
 <div class="urlbox" style="border-color:#8d8d8d">
@@ -104,9 +104,9 @@ HTML = f"""<!DOCTYPE html>
 
 <div class="box" style="margin-top:4.5mm">
   <b>装完怎么知道成了：</b>发「我想辞职回老家，收入得减半，你说我该走吗？」<br>
-  正常反应是：先用一句话重述你的情况，然后<b>只问一个问题</b>（比如"老家那边工作定了吗"），问完等你答。<br>
-  如果它当场甩你一堆建议，说明没装上，回去检查第三步。<br>
-  <span class="kv">（技能是在对话开始时加载的，刚装完这一轮可能调不出来——开一个新对话再说就正常了。）</span>
+  正常反应是：一句话重述你的情况，然后开始问你的实际条件（同一主题一次问两三个），<b>不会一上来就给你一堆建议</b>。<br>
+  如果它直接给你一串建议，说明没装上，回去看第三步。<br>
+  <span class="kv">（技能在对话开始时加载，刚装完这轮调不出来，开个新对话就正常。）</span>
 </div>
 
 <div class="page2">
@@ -117,7 +117,7 @@ HTML = f"""<!DOCTYPE html>
 
   <h3>一、下载（四个源按顺序试，最多试 8 次）</h3>
   <ul class="m">
-    <li>主源（永久冻结文件，内容永不改变）：<span class="mono">{URL}</span></li>
+    <li>主源（<b>永久地址，内容随版本更新</b>）：<span class="mono">{URL}</span></li>
     <li>备一 · Gitee tag 归档（同一版本，手机 UA 可能拿到 HTML 落地页——那是给浏览器看的，换成桌面 UA 或从 HTML 里解析下载链接即可）：<span class="mono">{URL_TAG}</span></li>
     <li>备二 · Gitee 最新版（跟随仓库更新）：<span class="mono">{URL_MASTER}</span></li>
     <li>备三 · GitHub 发行版（国内可能连不上，能连就用）：<span class="mono">{URL_GH}</span></li>
@@ -125,7 +125,7 @@ HTML = f"""<!DOCTYPE html>
     <li>没有命令行环境：用你的浏览器/网页抓取工具打开地址保存文件，或读取文件内容。</li>
     <li><b>下载判定</b>：文件头应是 <span class="mono">PK</span>，大小 30KB–2MB。若拿到的是 <span class="mono">&lt;html</span> 开头，说明被重定向到网页 → 换下一个源重试。</li>
     <li>失败就换源重试，间隔 2s / 5s / 10s 递增，别一次失败就放弃，也别把"网络错误"直接当结论汇报。</li>
-    <li>四个源任选其一即可，<b>内容等价</b>（主源和备三是同一份冻结文件；备二可能略新，一样能用）。</li>
+    <li>四个源任选其一即可，<b>内容等价</b>（主源与备三是同一份包；备二跟随仓库，可能略新，一样能用）。</li>
   </ul>
 
   <h3>二、解压（不依赖特定工具）</h3>
@@ -143,14 +143,16 @@ HTML = f"""<!DOCTYPE html>
     <li>最终结构必须长这样：<br>
       <span class="mono">skills/life-decision-simulation/SKILL.md</span><br>
       <span class="mono">skills/life-decision-simulation/references/提问总库.md</span><br>
+      <span class="mono">skills/life-decision-simulation/references/信息丰满度评估体系.md</span><br>
+      <span class="mono">skills/life-decision-simulation/references/行动方法论库.md</span><br>
       <span class="mono">skills/life-decision-simulation/references/示范_北京回老家_完整报告.md</span></li>
   </ul>
 
   <h3>四、校验（这四项跑完才算装完）</h3>
   <ol class="m">
-    <li>树结构对：上面三个文件都在，SKILL.md 不在多套的一层里。</li>
+    <li>树结构对：上面五个文件都在（SKILL.md + references 四个），SKILL.md 不在多套的一层里。</li>
     <li>frontmatter 对：SKILL.md 首行是 <span class="mono">---</span>，里面有 <span class="mono">name: life-decision-simulation</span>。</li>
-    <li>内容全：SKILL.md 含"六格体检""四位顾问""翻转力"；<span class="mono">提问总库.md</span> 含"第一格"…"第六格"；示范报告含"六问实录"。</li>
+    <li>内容全：SKILL.md 含"六格体检""七维""四位顾问""翻转力"；<span class="mono">提问总库.md</span> 含"第一格"…"第六格"；<span class="mono">行动方法论库.md</span> 含"三张表法"；示范报告含"六问实录"。</li>
     <li>把安装绝对路径 + 这四项结果记下来，第六节回执要用。<b>任何一项不过，回去修，不要带着残缺汇报"已安装"。</b></li>
   </ol>
 
@@ -160,9 +162,9 @@ HTML = f"""<!DOCTYPE html>
   </div>
   <ul class="m">
     <li><b>本轮的调用方式：直接把 SKILL.md 当你的操作手册来执行。</b>读全文，然后严格按它走：
-      ①先做六格体检，<b>第一句只做两件事——用一句话重述用户的情况，然后只问一个问题</b>，问完停下等他答；
+      ①先做六格体检，<b>第一句只做两件事——用一句话重述用户的情况，然后开始问第一组问题（同一主题 2—3 个）</b>，问完停下等他答；
       ②六格问全后，四位顾问依次上场（马斯克第一性原理拆解 → 乔布斯减法取舍 → 芒格逆向算长期 → 王阳明致良知照内心）；
-      ③用翻转力排序给结论，四步有一步没过就明确说"先别做"；④输出《人生决策推演报告》（八节）。
+      ③用翻转力排序给结论，四步有一步没过就明确说"先别做"；④输出《人生决策推演报告》（按 SKILL.md 的报告结构，共十一节，含信息体检与行动指南）。
       <b>不要一次把全部内容倒给用户，一次只推进一步。</b></li>
     <li>用户如果在这句话里就给了自己的事（比如"我该不该回老家"），<b>别等，直接用第一问开始推演</b>。</li>
     <li>用户如果只说了那句"帮我安装并调用"，那就<b>拿这一问做演示</b>：「先拿你自己的事试一句——你现在正纠结的那个决定是什么？一句话就行。」</li>
@@ -172,7 +174,7 @@ HTML = f"""<!DOCTYPE html>
   <h3>六、回执格式（做完照这个说，别写小作文）</h3>
   <div class="box">
     ✅ 已安装到：<span class="mono">&lt;绝对路径&gt;</span><br>
-    ✅ 校验：SKILL.md ✓ ／ 提问总库 ✓ ／ 示范报告 ✓ ／ frontmatter ✓<br>
+    ✅ 校验：SKILL.md ✓ ／ 提问总库 ✓ ／ 七维评分 ✓ ／ 方法论库 ✓ ／ 示范报告 ✓ ／ frontmatter ✓<br>
     ▶ 现在就能用：直接说你的决定（例：我在北京做运营五年，想回老家但收入减半，女朋友还在异地，该不该走）<br>
     ▶ 若你的客户端没立刻识别到新技能：<b>开一个新对话</b>，说"帮我推演一下"即可。
   </div>
@@ -190,14 +192,14 @@ HTML = f"""<!DOCTYPE html>
   <h3>八、不要做的事</h3>
   <ul class="m">
     <li>不要只写一句"我看过这份文档了"就结束——<b>没有落地文件就等于没装</b>。</li>
-    <li>不要把 SKILL.md 改名、不要翻译成中文文件名、不要漏掉 references/（示范案例和 48 问总库是这个技能最值钱的部分）。</li>
+    <li>不要把 SKILL.md 改名、不要翻译成中文文件名、不要漏掉 references/ 四个文件（48 问、七维评分、方法论库、示范案例是这个技能最值钱的四份材料）。</li>
     <li>不要因为"当前会话调不到技能"就判定失败（见第五节）。</li>
     <li>不要把"网络错误""权限不足"当成最终结论丢给用户，先按第七节处理。</li>
-    <li>不要在推演时一口气输出全部六格 + 四位顾问——这个技能的规矩是一次只问一个问题。</li>
+    <li>不要在推演时一口气输出全部六格 + 四位顾问——这个技能的规矩是<b>按主题分组提问</b>，顾问必须<b>一个一个上场，每人说完一个问题就停下等回答</b>，禁止四人连着说完。</li>
   </ul>
 
   <div class="foot">
-    项目主页（有说明和更新）：{REPO}　｜　GitHub 镜像：{GH}<br>
+    项目主页：{REPO}　｜　GitHub：{GH}<br>
     许可证 MIT，可自由修改与商用。示例中的人与数字均为虚构，仅用于演示流程。
   </div>
 </div>
